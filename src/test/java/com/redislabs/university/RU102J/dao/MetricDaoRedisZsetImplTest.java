@@ -6,7 +6,6 @@ import com.redislabs.university.RU102J.api.MeterReading;
 import com.redislabs.university.RU102J.api.MetricUnit;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.time.ZoneOffset;
@@ -15,13 +14,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 public class MetricDaoRedisZsetImplTest extends JedisDaoTestBase {
 
     private List<MeterReading> readings;
-    private Long siteId = 1L;
-    private ZonedDateTime startingDate = ZonedDateTime.now(ZoneOffset.UTC);
+    private final Long siteId = 1L;
+    private final ZonedDateTime startingDate = ZonedDateTime.now(ZoneOffset.UTC);
 
     @After
     public void flush() {
@@ -35,7 +34,7 @@ public class MetricDaoRedisZsetImplTest extends JedisDaoTestBase {
     public void generateData() {
         readings = new ArrayList<>();
         ZonedDateTime time = startingDate;
-        for (int i=0; i <  72 * 60; i++) {
+        for (int i = 0; i < 72 * 60; i++) {
             MeterReading reading = new MeterReading();
             reading.setSiteId(siteId);
             reading.setTempC(i * 1.0);
@@ -48,14 +47,12 @@ public class MetricDaoRedisZsetImplTest extends JedisDaoTestBase {
     }
 
     // Challenge #2
-    @Ignore
     @Test
     public void testSmall() {
         testInsertAndRetrieve(1);
     }
 
     // Challenge #2
-    @Ignore
     @Test
     public void testOneDay() {
         testInsertAndRetrieve(60 * 24);
@@ -63,7 +60,6 @@ public class MetricDaoRedisZsetImplTest extends JedisDaoTestBase {
 
 
     // Challenge #2
-    @Ignore
     @Test
     public void testMultipleDays() {
         testInsertAndRetrieve(60 * 70);
@@ -75,8 +71,7 @@ public class MetricDaoRedisZsetImplTest extends JedisDaoTestBase {
             metricDao.insert(reading);
         }
 
-        List<Measurement> measurements = metricDao.getRecent(siteId, MetricUnit.WHGenerated,
-         startingDate, limit);
+        List<Measurement> measurements = metricDao.getRecent(siteId, MetricUnit.WHGenerated, startingDate, limit);
         assertThat(measurements.size(), is(limit));
         int i = limit;
         for (Measurement measurement : measurements) {
