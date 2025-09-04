@@ -2,23 +2,18 @@ package com.redislabs.university.RU102J.dao;
 
 import com.redislabs.university.RU102J.HostPort;
 import com.redislabs.university.RU102J.TestKeyManager;
-import com.redislabs.university.RU102J.api.MeterReading;
 import com.redislabs.university.RU102J.api.Site;
 import org.junit.*;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
-import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
 
 public class SiteDaoRedisImplTest {
@@ -32,7 +27,7 @@ public class SiteDaoRedisImplTest {
     public static void setUp() throws Exception {
         String password = HostPort.getRedisPassword();
 
-        if (password.length() > 0) {
+        if (!password.isEmpty()) {
             jedisPool = new JedisPool(new JedisPoolConfig(), HostPort.getRedisHost(), HostPort.getRedisPort(), 2000, password);
         } else {
             jedisPool = new JedisPool(HostPort.getRedisHost(), HostPort.getRedisPort());
@@ -40,7 +35,7 @@ public class SiteDaoRedisImplTest {
 
         jedis = new Jedis(HostPort.getRedisHost(), HostPort.getRedisPort());
 
-        if (password.length() > 0) {
+        if (!password.isEmpty()) {
             jedis.auth(password);
         }
 
@@ -62,11 +57,11 @@ public class SiteDaoRedisImplTest {
     public void generateData() {
         sites = new HashSet<>();
         sites.add(new Site(1, 4.5, 3, "123 Willow St.",
-                "Oakland", "CA", "94577" ));
+                "Oakland", "CA", "94577"));
         sites.add(new Site(2, 3.0, 2, "456 Maple St.",
-                 "Oakland", "CA", "94577" ));
+                "Oakland", "CA", "94577"));
         sites.add(new Site(3, 4.0, 3, "789 Oak St.",
-                 "Oakland", "CA", "94577" ));
+                "Oakland", "CA", "94577"));
     }
 
     /**
@@ -97,7 +92,6 @@ public class SiteDaoRedisImplTest {
      * Challenge #1 Part 1. Use this test case to
      * implement the challenge in Chapter 1.
      */
-    @Ignore
     @Test
     public void findAllWithMultipleSites() {
         SiteDaoRedisImpl dao = new SiteDaoRedisImpl(jedisPool);
@@ -113,7 +107,6 @@ public class SiteDaoRedisImplTest {
      * Challenge #1 Part 2. Use this test case to
      * implement the challenge in Chapter 1.
      */
-    @Ignore
     @Test
     public void findAllWithEmptySites() {
         SiteDaoRedisImpl dao = new SiteDaoRedisImpl(jedisPool);
